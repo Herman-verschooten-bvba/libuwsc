@@ -52,7 +52,7 @@ static void uwsc_onmessage(struct uwsc_client *cli, void *data, size_t len, bool
     lua_rawgeti(L, LUA_REGISTRYINDEX, cl->onmessage_ref);
 	if (!lua_isfunction(L, -1))
 		return;
-    
+
     lua_pushlstring(L, data, len);
     lua_pushboolean(L, binary);
 
@@ -89,7 +89,7 @@ static void uwsc_onclose(struct uwsc_client *cli, int code, const char *reason)
 
     lua_pushinteger(L, code);
     lua_pushstring(L, reason);
-    
+
     lua_call(L, 2, 0);
 }
 
@@ -114,7 +114,7 @@ static int uwsc_lua_new(lua_State *L)
     const char *url = lua_tostring(L, 1);
     int ping_interval = lua_tointeger(L, 2);
     const char *extra_header = NULL;
-    
+
     if (lua_istable(L, 3)) {
         struct ev_loop **tmp;
 
@@ -177,7 +177,7 @@ static int uwsc_lua_on(lua_State *L)
     else
         luaL_argcheck(L, false, 2, "available event name: open message error close");
 
-	return 0;
+    return 0;
 }
 
 static int __uwsc_lua_send(lua_State *L, int op)

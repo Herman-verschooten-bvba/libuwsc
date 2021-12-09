@@ -69,7 +69,7 @@ int uwsc_ssl_init(struct uwsc_ssl_ctx **ctx, int sock)
 {
     struct uwsc_ssl_ctx *c = calloc(1, sizeof(struct uwsc_ssl_ctx));
 
-    if (!ctx) {
+    if (!c) {
         uwsc_log_err("calloc failed: %s\n", strerror(errno));
         return -1;
     }
@@ -148,11 +148,14 @@ void uwsc_ssl_free(struct uwsc_ssl_ctx *ctx)
     if (!ctx)
         return;
 
+    uwsc_log_debug("In uwsc_ssl_free, %ul\n", OPENSSL_VERSION_NUMBER);
+
 #if UWSC_HAVE_MBEDTLS
     mbedtls_ssl_free(&ctx->ssl);
     mbedtls_ssl_config_free(&ctx->cfg);
 #else
     SSL_shutdown(ctx->ssl);
+    SSL_free(ctx->ssl);
     SSL_CTX_free(ctx->ctx);
 #endif
     free(ctx);
